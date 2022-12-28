@@ -1,7 +1,7 @@
 <template>
   <div id="nav">
     <el-form v-if="!loginState" :model="loginForm" :inline="true">
-      <el-form-item label="Email address" size="medium">
+      <el-form-item label="Email address" size="default">
         <el-input v-model="loginForm.username"></el-input>
       </el-form-item>
       <el-form-item label="Password">
