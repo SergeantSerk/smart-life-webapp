@@ -18,7 +18,7 @@
     </template>
   </div>
   <div id="devices">
-    <div v-for="device in devicesSorted.filter(device => includeInching || !device.name.includes('inching'))" :key="device.id">
+    <div v-for="device in filteredDevices" :key="device.id">
       <el-card class="device" :style="device.data.online === false ? 'filter: opacity(0.65) grayscale(1);' : ''">
         <el-tooltip effect="light" :content="device.type" :offset="-20"
           :show-arrow="false">
@@ -66,11 +66,12 @@ const loginState = ref(false)
 const devices = ref([])
 const includeInching = ref(false)
 
-const devicesSorted = computed(() => {
+const filteredDevices = computed(() => {
   const order = { true: 0, undefined: 1, false: 2 }
-  return devices.value.slice().sort((d1, d2) =>
-    order[d1.data.online] > order[d2.data.online] ? 1 : -1
-  )
+  return devices.value.slice()
+  .sort((d1, d2) => order[d1.data.state] <= order[d2.data.state] ? 1 : -1)
+  .filter(device => includeInching.value || !device.name.includes('inching'))
+  .filter(device => device.type !== 'scene')
 })
 
 const loginForm = ref({ username: '', password: '' })
