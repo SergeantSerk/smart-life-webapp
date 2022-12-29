@@ -12,12 +12,13 @@
       </el-form-item>
     </el-form>
     <template v-else>
+      <el-checkbox type="default" v-model="includeInching">Include Inching</el-checkbox>
       <el-button type="default" @click="refreshDevices()">Refresh</el-button>
       <el-button type="default" @click="logout()">Logout</el-button>
     </template>
   </div>
   <div id="devices">
-    <div v-for="device in devicesSorted" :key="device.id">
+    <div v-for="device in devicesSorted.filter(device => includeInching || !device.name.includes('inching'))" :key="device.id">
       <el-card class="device" :style="device.data.online === false ? 'filter: opacity(0.65) grayscale(1);' : ''">
         <el-tooltip effect="light" :content="device.type" :offset="-20"
           :show-arrow="false">
@@ -63,6 +64,7 @@ const homeAssistantClient = new tuya.HomeAssistantClient(
 
 const loginState = ref(false)
 const devices = ref([])
+const includeInching = ref(false)
 
 const devicesSorted = computed(() => {
   const order = { true: 0, undefined: 1, false: 2 }
